@@ -1,0 +1,15 @@
+<div class="col-md-4">
+    <div class="card mb-4 box-shadow">
+        <div class="card-body">
+            <p class="card-text">{{ object.status }}</p>
+            <p class="card-text">{{ object.clients|truncatechars:50 }}</p>
+            <p class="card-text">{{ object.message|truncatechars:100 }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="{#}" type="button"
+                       class="btn btn-sm btn-outline-secondary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

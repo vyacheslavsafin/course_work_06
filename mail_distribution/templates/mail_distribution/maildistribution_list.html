@@ -1,0 +1,29 @@
+{% extends 'mail_distribution/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-5">
+        <a class="btn btn-primary" href="{% url 'mailing_create' %}">Создать рассылку</a>
+    </div>
+    {% for object in mailing_list %}
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                    <p class="card-text">Кому: {{ object.clients }}</p>
+                    <p class="card-text">Тема: {{ object.message.title }}</p>
+                    <p class="card-text">Сообщение: {{ object.message.body }}</p>
+                    <p class="card-text">Статус: {{ object.status }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'mailing_detail' object.pk %}"
+                                    class="btn btn-sm btn-outline-secondary">Перейти</a>
+                        <a href="{% url 'mailing_update' object.pk %}" type="button"
+                                    class="btn btn-sm btn-outline-secondary">Изменить</a>
+                        <a href="{% url 'mailing_delete' object.pk %}" type="button"
+                                    class="btn btn-sm btn-outline-danger">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
