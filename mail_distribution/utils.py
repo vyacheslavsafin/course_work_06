@@ -1,8 +1,7 @@
 import datetime
-
 from django.utils import timezone
-
 from mail_distribution.models import *
+
 
 def mail_sender():
     sending_list = MailDistribution.objects.all()
