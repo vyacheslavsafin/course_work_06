@@ -29,12 +29,13 @@ class Message(models.Model):
 
 
 class MailDistribution(models.Model):
-    time = models.TimeField(verbose_name="Время начала рассылки")
+    time_start = models.DateTimeField(verbose_name="Время начала рассылки", **constants.NULLABLE)
+    time_end = models.DateTimeField(verbose_name="Время окончания рассылки", **constants.NULLABLE)
+    time_next = models.DateTimeField(verbose_name="Время следующей рассылки", **constants.NULLABLE)
     frequency = models.CharField(max_length=50,
                                  choices=constants.MAILING_FREQUENCY,
                                  verbose_name="Периодичность рассылки")
     status = models.CharField(max_length=50,
-                              choices=constants.MAILING_STATUS,
                               default=constants.MAILING_CREATED)
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
     clients = models.ManyToManyField(Client, verbose_name="клиенты")
