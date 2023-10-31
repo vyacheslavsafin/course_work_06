@@ -13,7 +13,7 @@ class StyleFormMixin:
 class MailDistributionForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = MailDistribution
-        exclude = ('status',)
+        exclude = ('status', 'owner')
 
 
 class MessageForm(StyleFormMixin, forms.ModelForm):

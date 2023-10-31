@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
 
     'mail_distribution.apps.MailDistributionConfig',
     'users.apps.UsersConfig',
@@ -144,5 +145,5 @@ SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
 CRONJOBS = [
-    ('*/5 * * * *', 'mail_distribution.cron.my_scheduled_job')
+    ('*/1 * * * *', 'mail_distribution.cron.my_scheduled_job')
 ]

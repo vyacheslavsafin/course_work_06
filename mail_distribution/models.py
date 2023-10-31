@@ -1,6 +1,6 @@
 from django.db import models
-
 from mail_distribution import constants
+from users.models import User
 
 
 class Client(models.Model):
@@ -40,6 +40,7 @@ class MailDistribution(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
     clients = models.ManyToManyField(Client, verbose_name="клиенты")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, **constants.NULLABLE)
 
     def __str__(self):
         return f'{self.clients} - {self.message}'
@@ -51,9 +52,9 @@ class MailDistribution(models.Model):
 
 class Logs(models.Model):
     time = models.DateTimeField(verbose_name="дата и время последней попытки")
-    status = models.CharField(max_length=50, verbose_name="Статус попытки")
-    response = models.CharField(default=False, verbose_name="Сообщение ошибки", **constants.NULLABLE)
+    response = models.BooleanField(verbose_name="Ответ сервера", **constants.NULLABLE)
     mailing = models.ForeignKey(MailDistribution, on_delete=models.CASCADE, verbose_name='Рассылка')
+    mail = models.EmailField(max_length=100, verbose_name="Почта", **constants.NULLABLE)
 
     def __str__(self):
         return self.response

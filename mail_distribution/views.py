@@ -16,7 +16,6 @@ def index(request):
 class MailDistributionListView(ListView):
     model = MailDistribution
     extra_context = {
-        'mailing_list': MailDistribution.objects.all(),
         'title': 'Список рассылок'
     }
 
@@ -33,6 +32,9 @@ class MailDistributionCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         self.object.owner = self.request.user
+        self.object.time_next = self.object.time_start
+        if self.object.time_end <= self.object.time_next:
+            self.object.status = constants.MAILING_FINISHED
         self.object.save()
         return super().form_valid(form)
 
@@ -57,7 +59,6 @@ class MailDistributionDeleteView(DeleteView):
 class MessageListView(ListView):
     model = Message
     extra_context = {
-        'mail_list': Message.objects.all(),
         'title': 'Список сообщений'
     }
 
@@ -98,7 +99,6 @@ class MessageDeleteView(DeleteView):
 class ClientListView(ListView):
     model = Client
     extra_context = {
-        'client_list': Client.objects.all(),
         'title': 'Список клиентов'
     }
 
