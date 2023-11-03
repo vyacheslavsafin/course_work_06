@@ -7,6 +7,7 @@ class Client(models.Model):
     email = models.EmailField(max_length=100, verbose_name="Почта")
     name = models.CharField(max_length=150, verbose_name="Имя")
     comment = models.TextField(verbose_name="Комментарий", **constants.NULLABLE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, **constants.NULLABLE)
 
     def __str__(self):
         return f'{self.name} ({self.email})'
@@ -19,6 +20,7 @@ class Client(models.Model):
 class Message(models.Model):
     title = models.CharField(max_length=150, verbose_name="Тема письма")
     body = models.TextField(verbose_name="Тело письма")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, **constants.NULLABLE)
 
     def __str__(self):
         return f'{self.title} ({self.body})'
@@ -43,7 +45,7 @@ class MailDistribution(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, **constants.NULLABLE)
 
     def __str__(self):
-        return f'{self.clients} - {self.message}'
+        return f'{self.clients}, {self.message}'
 
     class Meta:
         verbose_name = 'Рассылка'
@@ -55,9 +57,10 @@ class Logs(models.Model):
     response = models.BooleanField(verbose_name="Ответ сервера", **constants.NULLABLE)
     mailing = models.ForeignKey(MailDistribution, on_delete=models.CASCADE, verbose_name='Рассылка')
     mail = models.EmailField(max_length=100, verbose_name="Почта", **constants.NULLABLE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, **constants.NULLABLE)
 
     def __str__(self):
-        return self.response
+        return f'{self.time} - {self.response}'
 
     class Meta:
         verbose_name = 'Лог'

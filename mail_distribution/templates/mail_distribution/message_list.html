@@ -11,6 +11,7 @@
                 <div class="card-body">
                     <p class="card-text">Тема: {{ object.title }}</p>
                     <p class="card-text">Сообщение: {{ object.body }}</p>
+                    <p class="card-text">Пользователь: {{ object.owner|default:"-" }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{% url 'mail_detail' object.pk %}"
                                     class="btn btn-sm btn-outline-secondary">Перейти</a>

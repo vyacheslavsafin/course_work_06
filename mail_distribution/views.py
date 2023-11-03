@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from mail_distribution.forms import *
@@ -5,19 +7,23 @@ from mail_distribution.models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
+@login_required()
 def index(request):
     context = {
-        'mailing_list': MailDistribution.objects.all(),
+        'mailing_list': MailDistribution.objects.filter(owner=request.user),
         'title': 'Главная страница'
     }
     return render(request, 'mail_distribution/index.html', context)
 
 
-class MailDistributionListView(ListView):
+class MailDistributionListView(LoginRequiredMixin, ListView):
     model = MailDistribution
     extra_context = {
         'title': 'Список рассылок'
     }
+
+    def get_queryset(self):
+        return MailDistribution.objects.filter(owner=self.request.user)
 
 
 class MailDistributionDetailView(DetailView):
@@ -56,11 +62,14 @@ class MailDistributionDeleteView(DeleteView):
     success_url = reverse_lazy('mailings')
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     extra_context = {
         'title': 'Список сообщений'
     }
+
+    def get_queryset(self):
+        return Message.objects.filter(owner=self.request.user)
 
 
 class MessageDetailView(DetailView):
@@ -96,11 +105,14 @@ class MessageDeleteView(DeleteView):
     success_url = reverse_lazy('mail_list')
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     extra_context = {
         'title': 'Список клиентов'
     }
+
+    def get_queryset(self):
+        return Client.objects.filter(owner=self.request.user)
 
 
 class ClientDetailView(DetailView):
