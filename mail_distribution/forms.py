@@ -13,7 +13,13 @@ class StyleFormMixin:
 class MailDistributionForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = MailDistribution
-        exclude = ('status', 'owner',)
+        exclude = ('status', 'owner', 'time_next', 'is_active')
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     user = kwargs.pop('initial').get('owner')
+    #     self.fields['message'].queryset = Message.objects.all().filter(owner=user)
+    #     self.fields['clients'].queryset = Client.objects.all().filter(owner=user)
 
 
 class MessageForm(StyleFormMixin, forms.ModelForm):

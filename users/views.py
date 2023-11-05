@@ -109,3 +109,5 @@ class UserListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if self.request.user.is_staff:
             return User.objects.all()
+        elif not self.request.user.is_staff:
+            return redirect(reverse_lazy('index'))

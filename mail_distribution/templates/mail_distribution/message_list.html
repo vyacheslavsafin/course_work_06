@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="row">
-    {% if perms.mail_distribution.add_message %}
+    {% if not user.is_staff %}
         <div class="col-12 mb-5">
             <a class="btn btn-primary" href="{% url 'mail_create' %}">Создать сообщение</a>
         </div>
@@ -17,11 +17,11 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{% url 'mail_detail' object.pk %}"
                                     class="btn btn-sm btn-outline-secondary">Перейти</a>
-                        {% if perms.mail_distribution.change_message %}
+                        {% if not user.is_staff %}
                             <a href="{% url 'mail_update' object.pk %}" type="button"
                                         class="btn btn-sm btn-outline-secondary">Изменить</a>
                         {% endif %}
-                        {% if perms.mail_distribution.delete_message %}
+                        {% if not user.is_staff %}
                             <a href="{% url 'mail_delete' object.pk %}" type="button"
                                         class="btn btn-sm btn-outline-danger">Удалить</a>
                         {% endif %}

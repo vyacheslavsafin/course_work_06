@@ -15,19 +15,18 @@
                             <th scope="col">Ответ сервера</th>
                             <th scope="col">Рассылка</th>
                             <th scope="col">Почта</th>
+                            <th scope="col">owner</th>
                         </tr>
                         </thead>
                         <tbody>
+                            {{ object_list }}
                             {% for object in object_list %}
                             <tr>
                                 <td>{{ object.time }}</td>
                                 <td>{{ object.response }}</td>
-                                <td>{{ object.mailing }}</td>
-                                <td>
-                                    {% for obj in object.clients.all %}
-                                        {{ obj.email }}
-                                    {% endfor %}
-                                </td>
+                                <td>{{ object.mailing.message }}</td>
+                                <td>{{ object.mail }}</td>
+                                <td>{{ object.owner }}</td>
                             </tr>
                         </tbody>
                         {% endfor %}

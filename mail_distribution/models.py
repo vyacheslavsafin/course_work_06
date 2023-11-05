@@ -43,6 +43,7 @@ class MailDistribution(models.Model):
     clients = models.ManyToManyField(Client, verbose_name="клиенты")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, **constants.NULLABLE)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.clients}, {self.message}'

@@ -48,7 +48,12 @@ class MailDistributionCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
         return super().form_valid(form)
 
     def test_func(self):
-        return self.request.user.is_staff
+        return not self.request.user.is_staff
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['owner'] = self.request.user
+        return initial
 
 
 class MailDistributionUpdateView(LoginRequiredMixin, UpdateView):
@@ -161,4 +166,4 @@ class LogsListView(LoginRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        return Logs.objects.filter(owner=self.request.user)
+        return Logs.objects.all()
