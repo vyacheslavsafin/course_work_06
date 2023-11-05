@@ -1,0 +1,39 @@
+{% extends 'mail_distribution/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <p class="card-text">Список рассылок</p>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Клиенты</th>
+                            <th scope="col">Статус</th>
+                            <th scope="col">Сообщение</th>
+                            <th scope="col">Пользователь</th>
+                        </tr>
+                        </thead>
+                        {% for object in mailing_list %}
+                            <tbody>
+                            <tr>
+                                <td>
+                                    {% for obj in object.clients.all %}
+                                        {{ obj.email }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ object.status }}</td>
+                                <td>{{ object.message }}</td>
+                                <td>{{ object.owner }}</td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
