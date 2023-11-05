@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_crontab',
+    'django_crontab',
 
     'mail_distribution.apps.MailDistributionConfig',
     'users.apps.UsersConfig',

@@ -2,9 +2,11 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12 mb-5">
-        <a class="btn btn-primary" href="{% url 'mail_create' %}">Создать сообщение</a>
-    </div>
+    {% if perms.mail_distribution.add_message %}
+        <div class="col-12 mb-5">
+            <a class="btn btn-primary" href="{% url 'mail_create' %}">Создать сообщение</a>
+        </div>
+    {% endif %}
     {% for object in object_list %}
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
@@ -15,10 +17,14 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{% url 'mail_detail' object.pk %}"
                                     class="btn btn-sm btn-outline-secondary">Перейти</a>
-                        <a href="{% url 'mail_update' object.pk %}" type="button"
-                                    class="btn btn-sm btn-outline-secondary">Изменить</a>
-                        <a href="{% url 'mail_delete' object.pk %}" type="button"
-                                    class="btn btn-sm btn-outline-danger">Удалить</a>
+                        {% if perms.mail_distribution.change_message %}
+                            <a href="{% url 'mail_update' object.pk %}" type="button"
+                                        class="btn btn-sm btn-outline-secondary">Изменить</a>
+                        {% endif %}
+                        {% if perms.mail_distribution.delete_message %}
+                            <a href="{% url 'mail_delete' object.pk %}" type="button"
+                                        class="btn btn-sm btn-outline-danger">Удалить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

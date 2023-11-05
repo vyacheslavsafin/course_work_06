@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from mail_distribution.forms import *
@@ -7,7 +7,7 @@ from mail_distribution.models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
-@login_required()
+@login_required
 def index(request):
     context = {
         'mailing_list': MailDistribution.objects.filter(owner=request.user),
@@ -23,14 +23,17 @@ class MailDistributionListView(LoginRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        return MailDistribution.objects.filter(owner=self.request.user)
+        if not self.request.user.is_staff:
+            return MailDistribution.objects.filter(owner=self.request.user)
+        else:
+            return MailDistribution.objects.all()
 
 
-class MailDistributionDetailView(DetailView):
+class MailDistributionDetailView(LoginRequiredMixin, DetailView):
     model = MailDistribution
 
 
-class MailDistributionCreateView(CreateView):
+class MailDistributionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = MailDistribution
     form_class = MailDistributionForm
     success_url = reverse_lazy('mailings')
@@ -44,8 +47,11 @@ class MailDistributionCreateView(CreateView):
         self.object.save()
         return super().form_valid(form)
 
+    def test_func(self):
+        return self.request.user.is_staff
 
-class MailDistributionUpdateView(UpdateView):
+
+class MailDistributionUpdateView(LoginRequiredMixin, UpdateView):
     model = MailDistribution
     form_class = MailDistributionForm
     success_url = reverse_lazy('mailings')
@@ -57,7 +63,7 @@ class MailDistributionUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class MailDistributionDeleteView(DeleteView):
+class MailDistributionDeleteView(LoginRequiredMixin, DeleteView):
     model = MailDistribution
     success_url = reverse_lazy('mailings')
 
@@ -69,26 +75,17 @@ class MessageListView(LoginRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        return Message.objects.filter(owner=self.request.user)
+        if not self.request.user.is_staff:
+            return Message.objects.filter(owner=self.request.user)
+        else:
+            return Message.objects.all()
 
 
-class MessageDetailView(DetailView):
+class MessageDetailView(LoginRequiredMixin, DetailView):
     model = Message
 
 
-class MessageCreateView(CreateView):
-    model = Message
-    form_class = MessageForm
-    success_url = reverse_lazy('mail_list')
-
-    def form_valid(self, form):
-        self.object = form.save()
-        self.object.owner = self.request.user
-        self.object.save()
-        return super().form_valid(form)
-
-
-class MessageUpdateView(UpdateView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
     form_class = MessageForm
     success_url = reverse_lazy('mail_list')
@@ -100,7 +97,19 @@ class MessageUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class MessageDeleteView(DeleteView):
+class MessageUpdateView(LoginRequiredMixin, UpdateView):
+    model = Message
+    form_class = MessageForm
+    success_url = reverse_lazy('mail_list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+
+class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('mail_list')
 
@@ -112,14 +121,17 @@ class ClientListView(LoginRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        return Client.objects.filter(owner=self.request.user)
+        if not self.request.user.is_staff:
+            return Client.objects.filter(owner=self.request.user)
+        else:
+            return Client.objects.all()
 
 
-class ClientDetailView(DetailView):
+class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy('clients_list')
@@ -131,12 +143,22 @@ class ClientCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy('clients_list')
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     success_url = reverse_lazy('clients_list')
+
+
+class LogsListView(LoginRequiredMixin, ListView):
+    model = Logs
+    extra_context = {
+        'title': 'Логи'
+    }
+
+    def get_queryset(self):
+        return Logs.objects.filter(owner=self.request.user)

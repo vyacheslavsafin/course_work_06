@@ -11,25 +11,25 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">Клиенты</th>
-                            <th scope="col">Статус</th>
-                            <th scope="col">Сообщение</th>
-                            <th scope="col">Пользователь</th>
+                            <th scope="col">Дата и время попытки</th>
+                            <th scope="col">Ответ сервера</th>
+                            <th scope="col">Рассылка</th>
+                            <th scope="col">Почта</th>
                         </tr>
                         </thead>
-                        {% for object in mailing_list %}
-                            <tbody>
+                        <tbody>
+                            {% for object in object_list %}
                             <tr>
+                                <td>{{ object.time }}</td>
+                                <td>{{ object.response }}</td>
+                                <td>{{ object.mailing }}</td>
                                 <td>
                                     {% for obj in object.clients.all %}
                                         {{ obj.email }}
                                     {% endfor %}
                                 </td>
-                                <td>{{ object.status }}</td>
-                                <td>{{ object.message }}</td>
-                                <td>{{ object.owner }}</td>
                             </tr>
-                            </tbody>
+                        </tbody>
                         {% endfor %}
                     </table>
                 </div>

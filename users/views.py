@@ -2,16 +2,18 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 
 from users.forms import UserCreationForm, UserUpdateForm
 from users.models import User
@@ -88,3 +90,22 @@ def activate(request, uidb64, token):
         return redirect(reverse_lazy('users:success_verify'))
     else:
         return redirect(reverse_lazy('users:failure_verify'))
+
+@login_required
+def toggle_activity(request, pk):
+    if request.user.is_staff:
+        user = get_object_or_404(User, pk=pk)
+        if user.is_active:
+            user.is_active = False
+        else:
+            user.is_active = True
+        user.save()
+    return redirect(reverse('users:user_list'))
+
+
+class UserListView(LoginRequiredMixin, ListView):
+    model = User
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return User.objects.all()
