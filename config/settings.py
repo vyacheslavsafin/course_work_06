@@ -11,15 +11,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)m9z@jn-qm@e(j%(%gnzyh)k7@8e9#62&@5f1vtv6wi+yaga(('
+SECRET_KEY = getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,9 +81,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cw6',
-        'USER': 'postgres'
+        'ENGINE': getenv('DATABASE_ENGINE'),
+        'NAME': getenv('DATABASE_NAME'),
+        'USER': getenv('DATABASE_USER')
     }
 }
 
@@ -134,12 +138,12 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'users:login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'reaver74@yandex.ru'
-EMAIL_HOST_PASSWORD = 'ybtgbzlvzqrvunck'
-EMAIL_USE_SSL = True
+EMAIL_BACKEND = getenv('EMAIL_BACKEND')
+EMAIL_HOST = getenv('EMAIL_HOST')
+EMAIL_PORT = getenv('EMAIL_PORT')
+EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = getenv('EMAIL_USE_SSL') == '1'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -149,10 +153,10 @@ CRONJOBS = [
     ('*/1 * * * *', 'mail_distribution.cron.my_scheduled_job')
 ]
 
-CACHE_ENABLED = True
+CACHE_ENABLED = getenv('CACHE_ENABLED') == '1'
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": getenv('CACHE_LOCATION'),
     }
 }
