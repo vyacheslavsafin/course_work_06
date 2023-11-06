@@ -23,4 +23,5 @@ urlpatterns = [
     path('client/delete/<int:pk>', ClientDeleteView.as_view(), name='client_delete'),
 
     path('logs/', LogsListView.as_view(), name='logs_list'),
+    path('activity/<int:pk>', toggle_activity, name='toggle_activity')
 ]

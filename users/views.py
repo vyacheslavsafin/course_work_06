@@ -105,6 +105,9 @@ def toggle_activity(request, pk):
 
 class UserListView(LoginRequiredMixin, ListView):
     model = User
+    extra_context = {
+        'title': 'Список пользователей сервиса'
+    }
 
     def get_queryset(self):
         if self.request.user.is_staff:

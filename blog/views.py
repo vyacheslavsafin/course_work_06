@@ -40,6 +40,7 @@ class BlogUpdateView(UpdateView):
 class BlogListView(ListView):
     model = Blog
     extra_context = {
+        'blog_list': Blog.objects.all(),
         'title': 'Новости'
     }
 

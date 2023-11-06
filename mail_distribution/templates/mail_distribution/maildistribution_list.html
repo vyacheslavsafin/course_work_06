@@ -31,6 +31,15 @@
                                 <a href="{% url 'mailing_delete' object.pk %}" type="button"
                                    class="btn btn-sm btn-outline-danger">Удалить</a>
                             {% endif %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if user.is_staff %}
+                                {% if object.is_active %}
+                                    <a class="btn btn-warning" href="{% url 'toggle_activity' object.pk %}">Деактивировать</a>
+                                {% else %}
+                                    <a class="btn btn-success" href="{% url 'toggle_activity' object.pk %}">Активировать</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
                         </div>
                     </div>
                 </div>

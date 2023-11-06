@@ -148,3 +148,11 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 CRONJOBS = [
     ('*/1 * * * *', 'mail_distribution.cron.my_scheduled_job')
 ]
+
+CACHE_ENABLED = True
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}

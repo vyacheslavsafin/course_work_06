@@ -28,7 +28,9 @@
                         <li><a href="{% url 'clients_list' %}" class="text-white">Клиенты</a></li>
                         <li><a href="{% url 'mail_list' %}" class="text-white">Сообщения</a></li>
                         <li><a href="{% url 'blog:list' %}" class="text-white">Блог</a></li>
-                        <li><a href="{% url 'users:user_list' %}" class="text-white">Юзеры</a></li>
+                        {% if user.is_staff %}
+                            <li><a href="{% url 'users:user_list' %}" class="text-white">Пользователи сервиса</a></li>
+                        {% endif %}
                         <li><a href="{% url 'logs_list' %}" class="text-white">Логи</a></li>
                     </ul>
                 </div>

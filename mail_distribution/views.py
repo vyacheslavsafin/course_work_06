@@ -1,18 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+
 from mail_distribution.forms import *
 from mail_distribution.models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from mail_distribution.utils import counters
 
 
 @login_required
 def index(request):
-    context = {
-        'mailing_list': MailDistribution.objects.filter(owner=request.user),
-        'title': 'Главная страница'
-    }
+    context = counters()
     return render(request, 'mail_distribution/index.html', context)
 
 
@@ -166,4 +165,16 @@ class LogsListView(LoginRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        return Logs.objects.all()
+        return Logs.objects.filter(owner=self.request.user)
+
+
+@login_required
+def toggle_activity(request, pk):
+    if request.user.is_staff:
+        mailing = get_object_or_404(MailDistribution, pk=pk)
+        if mailing.is_active:
+            mailing.is_active = False
+        else:
+            mailing.is_active = True
+        mailing.save()
+    return redirect(reverse('mailings'))
